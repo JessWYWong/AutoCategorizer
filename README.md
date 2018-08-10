@@ -1,7 +1,7 @@
 # Autocategorizer
 https://github.com/acarnes/autocategorizer/
 
-See https://github.com/acarnes/blob/master/autocategorizer/autocategorizer.pdf for a thorough description of the algorithm. A brief mathless summary is below.
+See https://github.com/acarnes/autocategorizer/blob/master/autocategorizer.pdf for a thorough description of the algorithm. A brief mathless summary is below.
 
 The autocategorizer will maximize the expected statistical significance for an expected hypothesis compared to the null. The null hypothesis might be that no Higgs boson exists, while the expected hypothesis might be the Standard Model predictions for the Higgs boson. Physicists have a lot of faith in the Standard Model, so that's a reasonable hypothesis to expect. 
 
