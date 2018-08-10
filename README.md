@@ -1,19 +1,17 @@
-# The Autocategorizer and Boosted Decision Trees
-https://github.com/acarnes/bdt/
+# Autocategorizer
+https://github.com/acarnes/autocategorizer/
 
-The Autocategorizer code is on the binned_categorizer branch.
+The autocategorizer will maximize the expected statistical significance for an expected hypothesis compared to the null. The null hypothesis might be that no Higgs particle exists, while the expected hypothesis might be the Standard Model predictions for the Higgs boson. The algorithm compares the histograms for the null and the expected hypothesis along a specific variable and finds regions of feature space that maximize the global difference between the hypotheses. As is common in particle physics, we call the expected hypothesis signal plus background (S+B), and we call the null the background (B).
 
-The Boosted Decision Tree code is on the master branch. The noroot branch has the same BDT code without any ROOT dependencies.
+The signal quantifies the discrepancy between the null hypothesis and the expected hypothesis. When the signal is large compared to an expected fluctuation from the null, the expected hypothesis and the null are significantly different. The algorithm uses a decision tree to separate feature space into discrete regions that in combination maximize a global significance metric. The discrete regions of feature space are called categories. 
 
-## Boosted Decision Trees
-See the examples directory to see how to use the BDT code. There is an example cxx file there outlining basic usage of the BDT package.
+The algorithm uses SUM (xi-yi)^2/sigmai^2 to measure the statistical difference between the hypotheses. In the metric, xi is the amount expected in a bin according to the expected hypothesis, yi is the expected amount according to the null and sigmai is the size of an expected fluctuation according to the null (standard deviation). The sum is over all the bins in the histograms over all categories -- since each category will have unique distributions for S+B and B, with the most significant categories having very different S+B and B distributions. 
 
-## The Autocategorizer
-The binned_categorizer branch has the code for the autocategorizer. The master is a boosted decision tree package I made to do some trigger work way earlier. The BDT code was repurposed to make the autocategorizer. Anyways, if you want to categorize make sure to checkout the binned_categorizer branch after cloning/forking this repo.
+The sum reduces to SUM Si^2/Bi, where Si is the difference between the null and the expected hypothesis, xi-yi=Si+Bi-Bi, and sigmai^2=Bi is the poissonian variance. SUM Si^2/Bi is a chi-squared variable, and maximizing this should minimize the expected p-value for the expected hypothesis. This metric is termed the Poisson Significance. Another metric based on the Asimov Significance is also available in the package. The decision tree chooses regions of feature space such that the difference between S+B and B is maximally different according to the metric which accounts for the global statistical difference.   
 
-The autocategorizer makes optimum categories for events binned along the pdf variable -- the pdf variable is the one the signal and background histograms/fits are along for higgs combine. The autocategorizer minimizes the expected p-value on the background onlyi. It minimizes the expected p-value by categorizing to maximize the difference between the S+B and B-only hypotheses. Different sensitivity metrics (S/sqrt(B), Asimov, Punzi, etc) are used to quantify the difference between the hypothesis rating how the difference compares to an expected fluctuation.  
+## The Autocategorizer In Practice
 
- The algorithm needs to know the class (signal/bkg/data), the weight (xsec, lumi, scale_factors, mc_weight/sum_weights), the bin of each event, and the features. It takes in the csv files or flat ntuples with the sig/bkg, weight, bin, and feature info. It outputs an xml file of the categories with the cuts for each variable in the form of a decision tree. The autocategorizer uses the convention signal=1, bkg=0, data=-1. 
+ The algorithm needs to know the class (signal/bkg/data), the weight (in particle physics this would include the xsec, lumi, scale_factors, mc_weight/sum_weights), the bin of each event along the histogram variable, and the features. It takes in the csv files or flat ntuples with the sig/bkg, weight, bin, and feature info. It outputs an xml file of the categories with the cuts for each variable in the form of a decision tree. The autocategorizer uses the convention signal=1, bkg=0, data=-1. The package was created for high energy physics analyses so it uses ROOT. This is an unfortunate dependency for people outside the field, so I'll try to remove this dependency in the future.  
 
 Including data is optional. The appropriate way to use data with this library is to include some data and some background mc in a control region (bin=-1). If you turn on the scale-data flag, this bkg mc and data will be used to determine the data/bkg ratio in the control region and this ratio can be used to scale the bkg mc in the signal region.  
 
