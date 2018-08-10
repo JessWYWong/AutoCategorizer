@@ -1,6 +1,7 @@
 # Autocategorizer
 https://github.com/acarnes/autocategorizer/
-See https://github.com/acarnes/autocategorizer/autocategorizer.pdf for a thorough description of the algorithm. A brief summary is below.
+
+See https://github.com/acarnes/blob/master/autocategorizer/autocategorizer.pdf for a thorough description of the algorithm. A brief mathless summary is below.
 
 The autocategorizer will maximize the expected statistical significance for an expected hypothesis compared to the null. The null hypothesis might be that no Higgs boson exists, while the expected hypothesis might be the Standard Model predictions for the Higgs boson. Physicists have a lot of faith in the Standard Model, so that's a reasonable hypothesis to expect. 
 
@@ -13,9 +14,7 @@ The signal quantifies the discrepancy between the null hypothesis and the expect
 
 ![The autocategorizer partitions feature space into regions, extracting sensitive regions, and maximizing the net significance over all regions.](imgs/iter_all.png)
 
-The algorithm uses SUM (xi-yi)^2/sigmai^2 to measure the statistical difference between the hypotheses. In the metric, xi is the amount expected in a bin according to the expected hypothesis, yi is the expected amount according to the null and sigmai is the size of an expected fluctuation according to the null (standard deviation). The sum is over all the bins in the histograms over all categories -- each category will have unique distributions for S+B and B, with the most significant categories having very different S+B and B distributions. 
-
-The sum reduces to SUM Si^2/Bi, where Si is the difference between the null and the expected hypothesis, xi-yi=Si+Bi-Bi, and sigmai^2=Bi is the poissonian variance. SUM Si^2/Bi is a chi-squared variable, and maximizing this should minimize the expected p-value for the expected hypothesis. This metric is termed the Poisson Significance. Another metric based on the Asimov Significance is also available in the package. The decision tree chooses regions of feature space such that the difference between S+B and B is maximally different according to the metric which accounts for the global statistical difference.   
+Maximizing the metric should minimize the expected p-value given the expected hypothesis. The metric should account for the combined likelihood over all categories. One metric in the package is the Poisson Significance, which is described in the pdf linked above. The Poisson Significance is derived from the combined log-likelihood by approximating each Poissonian contribution as a Gaussian. Another metric available in the autocategorizer package is based on the Asimov Significance, which does not make a Gaussian approximation. The decision tree chooses regions of feature space such that the difference between S+B and B is maximally different according to the chosen metric of global statistical difference.   
 
 ## The Autocategorizer In Practice
 
